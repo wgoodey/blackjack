@@ -59,15 +59,19 @@ def reduce_ace(players_hand):
 def initial_deal():
     dealer_hand.clear()
     hit(dealer_hand)
+    hit(dealer_hand)
     hand.clear()
+    hit(hand)
     hit(hand)
 
 
+game_over = False
 play_again = True
 while play_again:
     initial_deal()
     score = sum(hand)
     dealer_score = sum(dealer_hand)
+
     while dealer_score < 17:
         hit(dealer_hand)
         dealer_score = sum(dealer_hand)
@@ -75,11 +79,14 @@ while play_again:
     print(art.logo)
     print("Welcome to Blackjack! The table is all set up.\n")
     print(f"The dealer's first card is {dealer_hand[0]}.\n")
-    print(f"Your first card is {hand[0]}.")
+    print(f"Your initial hand is {hand}.")
 
-    game_over = False
+    # a blackjack means instant stay
+    if score == 21 and len(hand) == 2:
+        print("You got a blackjack!")
+        game_over = True
+
     while not game_over:
-
         deal_again = input(f"Your total is: {sum(hand)}. Type \'hit\' to deal again or \'stay\' to keep your "
                            f"hand as it is.\n").lower()
         if deal_again == "hit":
@@ -95,31 +102,29 @@ while play_again:
                 else:
                     game_over = check_is_bust(hand)
                     print(f"Bad luck, with {score} you've gone over 21.")
-            # else:
-            # print(f"Your score is: {sum(hand)}")
         else:
             break
 
     score = sum(hand)
-    review_cards(dealer_hand)
     dealer_bust = check_is_bust(dealer_hand)
     bust = check_is_bust(hand)
 
-    print(f"\nThe dealer's total is {dealer_score}.")
+    review_cards(dealer_hand)
+    print(f"The dealer's total is {dealer_score}.")
 
-    if score == 21 and len(hand) == 2:
-        print("You got a blackjack! You win!")
+    if score == dealer_score:
+        print("It's a draw.")
+    elif score == 21 and len(hand) == 2:
+        print("You win!")
     elif not bust:
         if not dealer_bust and score > dealer_score:
             print("Congratulations, you win.")
-    elif score == dealer_score:
-        print("It's a draw.")
-    elif bust and dealer_bust:
+    elif dealer_bust:
         print("You both busted, so you both lose.")
     else:
         print("You lose.")
 
-    choice = input("Play again?\n").lower()
+    choice = input("\nPlay again?\n").lower()
     if choice == "yes":
         clear_screen()
     else:
