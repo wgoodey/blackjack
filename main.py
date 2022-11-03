@@ -109,6 +109,7 @@ while play_again:
     dealer_bust = check_is_bust(dealer_hand)
     bust = check_is_bust(hand)
 
+    print()
     review_cards(dealer_hand)
     print(f"The dealer's total is {dealer_score}.")
 
